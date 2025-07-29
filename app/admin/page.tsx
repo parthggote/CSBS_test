@@ -1377,7 +1377,7 @@ export default function AdminPage() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
-                        <div>
+            <div>
                           <Label>Quiz Title</Label>
                           <Input
                             value={newQuiz.title}
@@ -1452,136 +1452,136 @@ export default function AdminPage() {
                       </div>
                     </DialogContent>
                   </Dialog>
-                  <Dialog open={showQuizUploadDialog} onOpenChange={setShowQuizUploadDialog}>
-                    <DialogTrigger asChild>
+                <Dialog open={showQuizUploadDialog} onOpenChange={setShowQuizUploadDialog}>
+                  <DialogTrigger asChild>
                       <Button variant="outline">
                         <FileText className="w-4 h-4 mr-2" />
                         Generate from PDF
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-md">
-                      <DialogHeader>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
                         <DialogTitle>Generate AI Quiz</DialogTitle>
-                        <DialogDescription>
-                          Upload a PDF and configure your quiz settings
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="text-sm font-medium">Subject/Topic</label>
-                          <Input
-                            placeholder="e.g., Data Structures, Algorithms"
-                            value={quizUploadForm.subject}
-                            onChange={(e) => setQuizUploadForm({ ...quizUploadForm, subject: e.target.value })}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Difficulty</label>
-                          <select
-                            className="w-full p-2 border rounded-md"
-                            value={quizUploadForm.difficulty}
-                            onChange={(e) => setQuizUploadForm({ ...quizUploadForm, difficulty: e.target.value })}
-                          >
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                          </select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium">Questions</label>
-                            <Input
-                              type="number"
-                              min="5"
-                              max="50"
-                              value={quizUploadForm.questionCount}
-                              onChange={(e) => setQuizUploadForm({ ...quizUploadForm, questionCount: parseInt(e.target.value) })}
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Time (min)</label>
-                            <Input
-                              type="number"
-                              min="5"
-                              max="180"
-                              value={quizUploadForm.timeLimit}
-                              onChange={(e) => setQuizUploadForm({ ...quizUploadForm, timeLimit: parseInt(e.target.value) })}
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Description (optional)</label>
-                          <Input
-                            placeholder="Brief description of the quiz"
-                            value={quizUploadForm.description}
-                            onChange={(e) => setQuizUploadForm({ ...quizUploadForm, description: e.target.value })}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Upload PDF</label>
-                          <Input
-                            type="file"
-                            accept="application/pdf"
-                            onChange={async (event) => {
-                              const file = event.target.files?.[0];
-                              if (!file) return;
-                              if (file.type !== 'application/pdf') {
-                                alert('Please upload a PDF file');
-                                return;
-                              }
-                              setQuizPdfLoading(true);
-                              setQuizPdfName(file.name);
-                              try {
-                                // Upload file
-                                const formData = new FormData();
-                                formData.append('file', file);
-                                formData.append('type', 'quiz-generation');
-                                const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
-                                if (!uploadRes.ok) throw new Error('Failed to upload file');
-                                const uploadData = await uploadRes.json();
-                                setQuizPdfUploadProgress(50);
-                                // Generate quiz using AI
-                                const quizRes = await fetch('/api/quiz-generation', {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({
-                                    fileId: uploadData.fileId,
-                                    subject: quizUploadForm.subject,
-                                    difficulty: quizUploadForm.difficulty,
-                                    questionCount: quizUploadForm.questionCount,
-                                    timeLimit: quizUploadForm.timeLimit,
-                                    description: quizUploadForm.description
-                                  })
-                                });
-                                if (!quizRes.ok) throw new Error('Failed to generate quiz');
-                                const quizData = await quizRes.json();
-                                if (quizData.success) {
-                                  setQuizzes((prev) => [quizData.quiz, ...prev]);
-                                } else {
-                                  throw new Error(quizData.error || 'Failed to generate quiz');
-                                }
-                                setQuizPdfLoading(false);
-                                setQuizPdfUploadProgress(100);
-                                setShowQuizUploadDialog(false);
-                                setQuizUploadForm({ subject: '', difficulty: 'medium', questionCount: 10, timeLimit: 30, description: '' });
-                                setTimeout(() => setQuizPdfUploadProgress(0), 1000);
-                              } catch (err) {
-                                alert('Failed to generate quiz.');
-                                setQuizPdfLoading(false);
-                                setQuizPdfName(null);
-                              }
-                            }}
-                            disabled={quizPdfLoading}
-                          />
-                          <p className="text-xs text-gray-500 mt-1">
-                            Maximum file size: 10MB. Supported: PDF files only.
-                          </p>
-                        </div>
-                        {quizPdfLoading && <div className="text-xs text-blue-600">Generating quiz from your file...</div>}
+                      <DialogDescription>
+                        Upload a PDF and configure your quiz settings
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium">Subject/Topic</label>
+                        <Input
+                          placeholder="e.g., Data Structures, Algorithms"
+                          value={quizUploadForm.subject}
+                          onChange={(e) => setQuizUploadForm({ ...quizUploadForm, subject: e.target.value })}
+                        />
                       </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
+                      <div>
+                        <label className="text-sm font-medium">Difficulty</label>
+                        <select
+                          className="w-full p-2 border rounded-md"
+                          value={quizUploadForm.difficulty}
+                          onChange={(e) => setQuizUploadForm({ ...quizUploadForm, difficulty: e.target.value })}
+                        >
+                          <option value="easy">Easy</option>
+                          <option value="medium">Medium</option>
+                          <option value="hard">Hard</option>
+                        </select>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium">Questions</label>
+                          <Input
+                            type="number"
+                            min="5"
+                            max="50"
+                            value={quizUploadForm.questionCount}
+                            onChange={(e) => setQuizUploadForm({ ...quizUploadForm, questionCount: parseInt(e.target.value) })}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Time (min)</label>
+                          <Input
+                            type="number"
+                            min="5"
+                            max="180"
+                            value={quizUploadForm.timeLimit}
+                            onChange={(e) => setQuizUploadForm({ ...quizUploadForm, timeLimit: parseInt(e.target.value) })}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Description (optional)</label>
+                        <Input
+                          placeholder="Brief description of the quiz"
+                          value={quizUploadForm.description}
+                          onChange={(e) => setQuizUploadForm({ ...quizUploadForm, description: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Upload PDF</label>
+                        <Input
+                          type="file"
+                          accept="application/pdf"
+                          onChange={async (event) => {
+                            const file = event.target.files?.[0];
+                            if (!file) return;
+                            if (file.type !== 'application/pdf') {
+                              alert('Please upload a PDF file');
+                              return;
+                            }
+                            setQuizPdfLoading(true);
+                            setQuizPdfName(file.name);
+                            try {
+                              // Upload file
+                              const formData = new FormData();
+                              formData.append('file', file);
+                              formData.append('type', 'quiz-generation');
+                              const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+                              if (!uploadRes.ok) throw new Error('Failed to upload file');
+                              const uploadData = await uploadRes.json();
+                              setQuizPdfUploadProgress(50);
+                              // Generate quiz using AI
+                              const quizRes = await fetch('/api/quiz-generation', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  fileId: uploadData.fileId,
+                                  subject: quizUploadForm.subject,
+                                  difficulty: quizUploadForm.difficulty,
+                                  questionCount: quizUploadForm.questionCount,
+                                  timeLimit: quizUploadForm.timeLimit,
+                                  description: quizUploadForm.description
+                                })
+                              });
+                              if (!quizRes.ok) throw new Error('Failed to generate quiz');
+                              const quizData = await quizRes.json();
+                              if (quizData.success) {
+                                setQuizzes((prev) => [quizData.quiz, ...prev]);
+                              } else {
+                                throw new Error(quizData.error || 'Failed to generate quiz');
+                              }
+                              setQuizPdfLoading(false);
+                              setQuizPdfUploadProgress(100);
+                              setShowQuizUploadDialog(false);
+                              setQuizUploadForm({ subject: '', difficulty: 'medium', questionCount: 10, timeLimit: 30, description: '' });
+                              setTimeout(() => setQuizPdfUploadProgress(0), 1000);
+                            } catch (err) {
+                              alert('Failed to generate quiz.');
+                              setQuizPdfLoading(false);
+                              setQuizPdfName(null);
+                            }
+                          }}
+                          disabled={quizPdfLoading}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Maximum file size: 10MB. Supported: PDF files only.
+                        </p>
+                      </div>
+                      {quizPdfLoading && <div className="text-xs text-blue-600">Generating quiz from your file...</div>}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
               </div>
 
               {/* Quiz List */}
@@ -2030,65 +2030,65 @@ export default function AdminPage() {
 
               {!selectedFlashcardSet ? (
                 // Flash Card Sets List
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {flashcardSets.length === 0 ? (
-                    <div className="col-span-full text-center py-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {flashcardSets.length === 0 ? (
+                  <div className="col-span-full text-center py-8">
                       <Sparkles className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                       <p className="text-gray-600">No flash card sets created yet. Upload your notes to get started!</p>
-                    </div>
-                  ) : (
-                    flashcardSets.map((set) => (
-                      <Card key={set.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => {
-                        setSelectedFlashcardSet(set);
-                        setCurrentFlashcardIndex(0);
-                        setShowFlashcardAnswer(false);
-                      }}>
-                        <CardHeader>
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <CardTitle className="text-lg">{set.title}</CardTitle>
-                              <CardDescription>{set.description || 'No description'}</CardDescription>
-                            </div>
-                            <Badge variant="outline">{set.cards.length} cards</Badge>
+                  </div>
+                ) : (
+                  flashcardSets.map((set) => (
+                    <Card key={set.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => {
+                      setSelectedFlashcardSet(set);
+                      setCurrentFlashcardIndex(0);
+                      setShowFlashcardAnswer(false);
+                    }}>
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-lg">{set.title}</CardTitle>
+                            <CardDescription>{set.description || 'No description'}</CardDescription>
                           </div>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center justify-between">
-                              <span className="text-gray-600">Source:</span>
-                              <span className="font-medium truncate max-w-32">{set.sourceFile}</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-gray-600">Created:</span>
-                              <span className="font-medium">{new Date(set.createdAt).toLocaleDateString()}</span>
-                            </div>
+                          <Badge variant="outline">{set.cards.length} cards</Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Source:</span>
+                            <span className="font-medium truncate max-w-32">{set.sourceFile}</span>
                           </div>
-                          <Button className="w-full mt-4" variant="outline">
-                            Study Set
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))
-                  )}
-                </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Created:</span>
+                            <span className="font-medium">{new Date(set.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        <Button className="w-full mt-4" variant="outline">
+                          Study Set
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
               ) : (
                 // Study Mode for Selected Set
                 <div>
                   <div className="flex justify-between items-center mb-6">
                     <div>
-                      <Button variant="outline" onClick={() => {
-                        setSelectedFlashcardSet(null);
-                        setCurrentFlashcardIndex(0);
-                        setShowFlashcardAnswer(false);
-                      }}>
-                        ← Back to Sets
-                      </Button>
-                      <h3 className="text-lg font-semibold mt-2">{selectedFlashcardSet.title}</h3>
+                    <Button variant="outline" onClick={() => {
+                      setSelectedFlashcardSet(null);
+                      setCurrentFlashcardIndex(0);
+                      setShowFlashcardAnswer(false);
+                    }}>
+                      ← Back to Sets
+                    </Button>
+                    <h3 className="text-lg font-semibold mt-2">{selectedFlashcardSet.title}</h3>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-600">
-                        Card {currentFlashcardIndex + 1} of {selectedFlashcardSet.cards.length}
-                      </span>
+                    <span className="text-sm text-gray-600">
+                      Card {currentFlashcardIndex + 1} of {selectedFlashcardSet.cards.length}
+                    </span>
                     </div>
                   </div>
                   <div className="max-w-2xl mx-auto">
@@ -2106,24 +2106,24 @@ export default function AdminPage() {
                         )}
                       </div>
                       <div className="flex space-x-4">
-                        <Button
+                              <Button
                           onClick={() => setShowFlashcardAnswer(!showFlashcardAnswer)}
-                          variant="outline"
+                                variant="outline"
                         >
                           {showFlashcardAnswer ? 'Hide Answer' : 'Show Answer'}
                         </Button>
                         <Button
-                          onClick={() => {
-                            if (currentFlashcardIndex < selectedFlashcardSet.cards.length - 1) {
-                              setCurrentFlashcardIndex(currentFlashcardIndex + 1);
+                                onClick={() => {
+                                  if (currentFlashcardIndex < selectedFlashcardSet.cards.length - 1) {
+                                    setCurrentFlashcardIndex(currentFlashcardIndex + 1);
                               setShowFlashcardAnswer(false);
-                            }
-                          }}
+                                  }
+                                }}
                           disabled={currentFlashcardIndex >= selectedFlashcardSet.cards.length - 1}
-                        >
-                          Next Card
-                        </Button>
-                      </div>
+                              >
+                                Next Card
+                              </Button>
+                            </div>
                     </Card>
                   </div>
                 </div>

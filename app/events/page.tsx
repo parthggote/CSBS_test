@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Navigation } from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Calendar, Clock, MapPin, Users, Award } from "lucide-react"
+import { Calendar, Clock, MapPin, Users, Award, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 
 export default function EventsPage() {
@@ -55,11 +55,39 @@ export default function EventsPage() {
   }, [])
 
   const sponsors = [
-    { name: "TCS", logo: "/placeholder.svg?height=60&width=120" },
-    { name: "Microsoft", logo: "/placeholder.svg?height=60&width=120" },
-    { name: "Google", logo: "/placeholder.svg?height=60&width=120" },
-    { name: "Amazon", logo: "/placeholder.svg?height=60&width=120" },
+    'Superhero-Logo.png',
+    'menon-bearings-ltd--600 1.png',
+    'Angel-One-Logo.png',
+    'kartik travels logo 1.jpg',
+    'Mahabhrat construction logo.png',
+    'a heaven holiday.jpg',
+    'pioneer energy logo.jpg',
+    'easysynopsis logo 1.png',
+    'edited 1.png',
+    'swayam logo 1.png',
+    'Screenshot 2025-02-18 154332 2.jpg',
+    'kadson final logo 1.jpg',
   ]
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const sliderRef = useRef<HTMLDivElement>(null)
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % Math.ceil(sponsors.length / 4))
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + Math.ceil(sponsors.length / 4)) % Math.ceil(sponsors.length / 4))
+  }
+
+  // Auto-scroll carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide()
+    }, 5000) // Change slide every 5 seconds
+
+    return () => clearInterval(interval)
+  }, [currentSlide])
 
   const handleRegister = (eventId: number) => {
     console.log("Registering for event:", eventId)
@@ -239,20 +267,53 @@ export default function EventsPage() {
         </Tabs>
 
         {/* Sponsors Section */}
-        <section className="bg-white rounded-lg p-8 shadow-sm">
-          <h2 className="text-2xl font-bold text-center mb-8">Event Sponsors</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
-            {sponsors.map((sponsor, index) => (
-              <div key={index} className="text-center group">
-                <Image
-                  src={sponsor.logo || "/placeholder.svg"}
-                  alt={sponsor.name}
-                  width={120}
-                  height={60}
-                  className="mx-auto grayscale hover:grayscale-0 transition-all duration-300 group-hover:scale-110"
-                />
+        <section className="py-12 bg-white dark:bg-background mt-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold text-center mb-8 text-foreground">Previous Event Sponsors</h2>
+            <div className="relative">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={prevSlide}
+                  className="rounded-full p-2"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <div className="flex space-x-2">
+                  {Array.from({ length: Math.ceil(sponsors.length / 4) }).map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        index === currentSlide ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={nextSlide}
+                  className="rounded-full p-2"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
               </div>
-            ))}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 items-center">
+                {sponsors.slice(currentSlide * 4, (currentSlide + 1) * 4).map((logo, idx) => (
+                  <div key={logo} className="flex items-center justify-center p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow h-32 sm:h-40 md:h-48">
+                    <Image
+                      src={`/Sponsers/${logo}`}
+                      alt={`Sponsor ${currentSlide * 4 + idx + 1}`}
+                      width={200}
+                      height={150}
+                      className="object-contain h-20 sm:h-28 md:h-36 w-auto max-w-full"
+                      priority={idx < 2}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </div>
