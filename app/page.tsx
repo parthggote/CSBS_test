@@ -143,19 +143,9 @@ export default function HomePage() {
             scene="https://prod.spline.design/HV4FycB8MpWOMdRw/scene.splinecode"
             className="!w-full !h-full rounded-2xl shadow-2xl pointer-events-none"
           />
-          {/* Improved Overlay to hide Spline logo */}
+          {/* Responsive Overlay to hide Spline logo */}
           <div
-            className="absolute"
-            style={{
-              right: '1%',
-              bottom: '2%',
-              width: '210px',
-              height: '48px',
-              background: 'rgba(0,0,0,1)', // fully black, fully opaque
-              borderRadius: '16px',
-              zIndex: 30,
-              pointerEvents: 'none',
-            }}
+            className="absolute right-[1%] bottom-[2%] w-[140px] h-[32px] md:w-[180px] md:h-[40px] lg:w-[210px] lg:h-[48px] bg-black rounded-lg md:rounded-xl z-30 pointer-events-none"
           />
           {/* Floating CTA Buttons Overlay */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-4 z-20 pointer-events-auto">

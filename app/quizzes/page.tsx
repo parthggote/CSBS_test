@@ -98,20 +98,20 @@ export default function QuizzesPage() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty?.toLowerCase()) {
-      case 'easy': return 'bg-green-100 text-green-800'
-      case 'medium': return 'bg-yellow-100 text-yellow-800'
-      case 'hard': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
     }
   }
 
   const getSubjectColor = (subject: string) => {
     const colors = [
-      'bg-blue-100 text-blue-800',
-      'bg-purple-100 text-purple-800',
-      'bg-pink-100 text-pink-800',
-      'bg-indigo-100 text-indigo-800',
-      'bg-teal-100 text-teal-800'
+      'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+      'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+      'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-400',
+      'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400',
+      'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400'
     ]
     const index = subject?.length || 0
     return colors[index % colors.length]
@@ -244,7 +244,7 @@ export default function QuizzesPage() {
 
         {/* AI Quiz Generation Section */}
         <div className="mb-8">
-          <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+          <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50 border-blue-200 dark:border-blue-800">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -339,7 +339,7 @@ export default function QuizzesPage() {
                           onChange={handleFileUpload}
                           disabled={isUploading}
                         />
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           Maximum file size: 10MB. Supported: PDF files only.
                         </p>
                       </div>
@@ -347,16 +347,16 @@ export default function QuizzesPage() {
                       {isUploading && (
                         <div className="space-y-2">
                           <div className="flex items-center space-x-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span className="text-sm">Generating quiz from PDF...</span>
+                            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                            <span className="text-sm text-foreground">Generating quiz from PDF...</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-muted rounded-full h-2">
                             <div 
-                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                              className="bg-primary h-2 rounded-full transition-all duration-300"
                               style={{ width: `${uploadProgress}%` }}
                             ></div>
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted-foreground">
                             {uploadProgress < 50 ? 'Uploading file...' : 'Processing content and generating questions...'}
                           </p>
                         </div>
@@ -405,7 +405,7 @@ export default function QuizzesPage() {
           <TabsContent value="all">
             <div className="mb-6">
               <div className="relative max-w-md mx-auto">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   placeholder="Search by title, subject, or difficulty..."
                   value={searchTerm}
@@ -418,13 +418,13 @@ export default function QuizzesPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {loading ? (
                 <div className="col-span-full text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                  <p className="mt-2 text-gray-600">Loading quizzes...</p>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                  <p className="mt-2 text-muted-foreground">Loading quizzes...</p>
                 </div>
               ) : filteredQuizzes.length === 0 ? (
                 <div className="col-span-full text-center py-8">
-                  <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">No quizzes found.</p>
+                  <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No quizzes found.</p>
                 </div>
               ) : (
                 filteredQuizzes.map((quiz) => (
@@ -440,7 +440,7 @@ export default function QuizzesPage() {
                             {quiz.difficulty || 'Medium'}
                           </Badge>
                           {quiz.generatedFromPDF && (
-                            <Badge className="bg-purple-100 text-purple-800 text-xs">
+                            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 text-xs">
                               <Sparkles className="w-3 h-3 mr-1" />
                               AI Generated
                             </Badge>
@@ -451,49 +451,49 @@ export default function QuizzesPage() {
                     <CardContent>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Subject:</span>
+                          <span className="text-muted-foreground">Subject:</span>
                           <Badge variant="outline" className={getSubjectColor(quiz.subject)}>
                             {quiz.subject || 'General'}
                           </Badge>
                         </div>
                         
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Questions:</span>
-                          <span className="font-medium">{quiz.questionCount || 10}</span>
+                          <span className="text-muted-foreground">Questions:</span>
+                          <span className="font-medium text-foreground">{quiz.questionCount || 10}</span>
                         </div>
                         
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Time Limit:</span>
+                          <span className="text-muted-foreground">Time Limit:</span>
                           <div className="flex items-center">
-                            <Timer className="w-4 h-4 mr-1" />
-                            <span>{quiz.timeLimit || 30} min</span>
+                            <Timer className="w-4 h-4 mr-1 text-muted-foreground" />
+                            <span className="text-foreground">{quiz.timeLimit || 30} min</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Participants:</span>
+                          <span className="text-muted-foreground">Participants:</span>
                           <div className="flex items-center">
-                            <Users className="w-4 h-4 mr-1" />
-                            <span>{quiz.participants || 0}</span>
+                            <Users className="w-4 h-4 mr-1 text-muted-foreground" />
+                            <span className="text-foreground">{quiz.participants || 0}</span>
                           </div>
                         </div>
 
                         {quiz.bestScore && (
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Best Score:</span>
+                            <span className="text-muted-foreground">Best Score:</span>
                             <div className="flex items-center">
-                              <Award className="w-4 h-4 mr-1" />
-                              <span>{quiz.bestScore}%</span>
+                              <Award className="w-4 h-4 mr-1 text-muted-foreground" />
+                              <span className="text-foreground">{quiz.bestScore}%</span>
                             </div>
                           </div>
                         )}
 
                         {quiz.generatedFromPDF && quiz.originalFile && (
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">Source:</span>
+                            <span className="text-muted-foreground">Source:</span>
                             <div className="flex items-center">
-                              <FileText className="w-4 h-4 mr-1" />
-                              <span className="text-xs truncate max-w-20">{quiz.originalFile}</span>
+                              <FileText className="w-4 h-4 mr-1 text-muted-foreground" />
+                              <span className="text-xs truncate max-w-20 text-foreground">{quiz.originalFile}</span>
                             </div>
                           </div>
                         )}
