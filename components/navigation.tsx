@@ -27,14 +27,18 @@ export function Navigation({ currentUser }: NavigationProps) {
     router.push('/');
   };
 
-  const navItems =
-    currentUser && (currentUser.role === 'student' || currentUser.role === 'admin')
-      ? []
-      : [
-          { href: '/', label: 'Home' },
-          { href: '/events', label: 'Events' },
-          { href: '/resources', label: 'Resources' },
-        ];
+  // Navigation items - only show Events, Resources, Quizzes for non-logged-in users
+  const navItems = currentUser && (currentUser.role === 'student' || currentUser.role === 'admin')
+    ? [
+        { href: '/', label: 'Home' },
+        // Events, Resources, Quizzes are hidden for logged-in users
+      ]
+    : [
+        { href: '/', label: 'Home' },
+        { href: '/events', label: 'Events' },
+        { href: '/resources', label: 'Resources' },
+        { href: '/quizzes', label: 'Quizzes' },
+      ];
 
   return (
     <nav className="border-b bg-white dark:bg-black/80 backdrop-blur sticky top-0 z-50">

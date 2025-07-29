@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getDb } from '../../../lib/mongodb';
 
-const validTypes = ['pyqs', 'certifications', 'hackathons', 'interviews', 'events'];
+const validTypes = ['pyqs', 'certifications', 'hackathons', 'interviews', 'events', 'quizzes'];
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
 function getType(searchParams: URLSearchParams) {
@@ -23,6 +23,14 @@ function getUserFromRequest(req: NextRequest): JwtPayload | null {
   }
 }
 
+function getUserId(user: any) {
+  if (!user) return null;
+  if (typeof user === 'string') return user;
+  if ('id' in user) return user.id;
+  if ('_id' in user) return user._id;
+  return null;
+}
+
 export async function GET(req: NextRequest) {
   const user = getUserFromRequest(req);
   if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
@@ -30,6 +38,26 @@ export async function GET(req: NextRequest) {
   if (!type) return NextResponse.json({ message: 'Invalid resource type' }, { status: 400 });
   const db = await getDb();
   const collection = type === 'events' ? db.collection('Events') : db.collection(type);
+  if (type === 'quizzes') {
+    const user = getUserFromRequest(req);
+    if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
+    const userId = getUserId(user);
+    // If admin, show all quizzes
+    if (user.role === 'admin') {
+      const items = await collection.find({}).toArray();
+      return NextResponse.json(items);
+    } else {
+      // Student: show quizzes assigned to them or created by themselves
+      const items = await collection.find({ 
+        $or: [
+          { createdBy: userId },
+          { assignedTo: { $in: [userId] } },
+          { isActive: true } // Show active quizzes for all students
+        ]
+      }).toArray();
+      return NextResponse.json(items);
+    }
+  }
   const items = await collection.find({}).toArray();
   return NextResponse.json(items);
 }
