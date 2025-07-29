@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, User, Settings, Moon, Sun, ChevronRight } from "lucide-react"
+import { Menu, User, Settings, Moon, Sun, ChevronRight, Home, Calendar, BookOpen, Brain, LogIn } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Switch } from "@/components/ui/switch"
 import { useTheme } from "next-themes"
@@ -30,14 +30,14 @@ export function Navigation({ currentUser }: NavigationProps) {
   // Navigation items - only show Events, Resources, Quizzes for non-logged-in users
   const navItems = currentUser && (currentUser.role === 'student' || currentUser.role === 'admin')
     ? [
-        { href: '/', label: 'Home' },
+        { href: '/', label: 'Home', icon: Home },
         // Events, Resources, Quizzes are hidden for logged-in users
       ]
     : [
-        { href: '/', label: 'Home' },
-        { href: '/events', label: 'Events' },
-        { href: '/resources', label: 'Resources' },
-        { href: '/quizzes', label: 'Quizzes' },
+        { href: '/', label: 'Home', icon: Home },
+        { href: '/events', label: 'Events', icon: Calendar },
+        { href: '/resources', label: 'Resources', icon: BookOpen },
+        { href: '/quizzes', label: 'Quizzes', icon: Brain },
       ];
 
   return (
@@ -67,9 +67,10 @@ export function Navigation({ currentUser }: NavigationProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-white dark:hover:drop-shadow-[0_0_8px_white] transition-colors font-medium"
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-white dark:hover:drop-shadow-[0_0_8px_white] transition-colors font-medium group"
               >
-                {item.label}
+                <item.icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>{item.label}</span>
               </Link>
             ))}
 
@@ -102,7 +103,10 @@ export function Navigation({ currentUser }: NavigationProps) {
             ) : (
               <div className="flex items-center space-x-4">
                 <Link href="/login">
-                  <Button variant="ghost">Login</Button>
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <LogIn className="w-4 h-4" />
+                    <span>Login</span>
+                  </Button>
                 </Link>
               </div>
             )}
@@ -121,10 +125,11 @@ export function Navigation({ currentUser }: NavigationProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-lg font-medium hover:text-blue-600 transition-colors"
+                    className="flex items-center space-x-3 text-lg font-medium hover:text-blue-600 transition-colors group"
                     onClick={() => setIsOpen(false)}
                   >
-                    {item.label}
+                    <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span>{item.label}</span>
                   </Link>
                 ))}
                 {!currentUser && (
