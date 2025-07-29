@@ -33,13 +33,19 @@ function getUserId(user: any) {
 
 export async function GET(req: NextRequest) {
   const user = getUserFromRequest(req);
-  if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
   const type = getType(req.nextUrl.searchParams);
   if (!type) return NextResponse.json({ message: 'Invalid resource type' }, { status: 400 });
   const db = await getDb();
   const collection = type === 'events' ? db.collection('Events') : db.collection(type);
+  
+  // Allow public access to events, resources (pyqs, certifications, hackathons, interviews)
+  if (type === 'events' || type === 'pyqs' || type === 'certifications' || type === 'hackathons' || type === 'interviews') {
+    const items = await collection.find({}).toArray();
+    return NextResponse.json(items);
+  }
+  
+  // Require authentication for quizzes
   if (type === 'quizzes') {
-    const user = getUserFromRequest(req);
     if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
     const userId = getUserId(user);
     // If admin, show all quizzes
@@ -58,6 +64,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(items);
     }
   }
+  
+  // For other types, require authentication
+  if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
   const items = await collection.find({}).toArray();
   return NextResponse.json(items);
 }

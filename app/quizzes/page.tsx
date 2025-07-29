@@ -34,7 +34,7 @@ import {
   Sparkles,
   Loader2
 } from "lucide-react"
-import Chatbot from '../../../components/Chatbot';
+import Chatbot from '../components/Chatbot';
 
 export default function QuizzesPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -58,7 +58,7 @@ export default function QuizzesPage() {
     async function fetchQuizzes() {
       setLoading(true)
       try {
-        const res = await fetch("/api/resources?type=quizzes")
+        const res = await fetch("/api/resources?type=quizzes", { credentials: 'include' })
         const data = await res.json()
         setQuizzes(Array.isArray(data) ? data : [])
       } catch (error) {
