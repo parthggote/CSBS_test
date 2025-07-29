@@ -186,17 +186,19 @@ export default function HomePage() {
           />
           {/* Dynamic Spline logo hiding is handled by JavaScript */}
           {/* Floating CTA Buttons Overlay */}
-          <div className="absolute bottom-8 sm:bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 z-20 pointer-events-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+          <div className="absolute bottom-6 sm:bottom-8 md:bottom-12 lg:bottom-16 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 z-20 pointer-events-auto w-full max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-lg px-4 sm:px-0">
             <Link href="/events" className="w-full sm:w-auto">
-              <Button size="lg" className="rounded-full px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-xl hover:scale-105 hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2 w-full h-12 sm:h-auto">
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                Explore Events
+              <Button size="sm" className="rounded-full px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-xl hover:scale-105 hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2 w-full h-10 sm:h-12 md:h-auto">
+                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">Explore Events</span>
+                <span className="sm:hidden">Events</span>
               </Button>
             </Link>
             <Link href="/resources" className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="rounded-full px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold border-2 border-blue-500 text-blue-700 dark:text-blue-300 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50 dark:hover:bg-gray-700/80 hover:scale-105 hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2 shadow-md w-full h-12 sm:h-auto">
-                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                Access Resources
+              <Button size="sm" variant="outline" className="rounded-full px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold border-2 border-blue-500 text-blue-700 dark:text-blue-300 bg-white/80 dark:bg-gray-800/80 hover:bg-blue-50 dark:hover:bg-gray-700/80 hover:scale-105 hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2 shadow-md w-full h-10 sm:h-12 md:h-auto">
+                <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">Access Resources</span>
+                <span className="sm:hidden">Resources</span>
               </Button>
             </Link>
           </div>
