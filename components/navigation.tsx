@@ -132,6 +132,21 @@ export function Navigation({ currentUser }: NavigationProps) {
                     <span>{item.label}</span>
                   </Link>
                 ))}
+                
+                {/* Dark mode toggle - Mobile */}
+                <div className="flex items-center justify-between py-2 border-t border-gray-200 dark:border-gray-700 mt-4">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</span>
+                  <div className="flex items-center space-x-2">
+                    <Sun className={`w-4 h-4 ${theme === 'light' ? 'text-yellow-500' : 'text-gray-400'}`} />
+                    <Switch
+                      checked={theme === 'dark'}
+                      onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                      aria-label="Toggle dark mode"
+                    />
+                    <Moon className={`w-4 h-4 ${theme === 'dark' ? 'text-blue-600' : 'text-gray-400'}`} />
+                  </div>
+                </div>
+                
                 {!currentUser && (
                   <>
                     <Link href="/login" onClick={() => setIsOpen(false)}>
