@@ -147,10 +147,17 @@ export default function DashboardPage() {
   }, [user]);
 
   useEffect(() => {
-    if (!loading && !currentUser) {
-      setShouldRedirect(true);
+    // Only redirect if we're done loading and still don't have a user
+    // Give more time for authentication to complete
+    if (!loading && !currentUser && !isLoading) {
+      // Add a small delay to allow authentication to complete
+      const timer = setTimeout(() => {
+        setShouldRedirect(true);
+      }, 2000); // Wait 2 seconds before redirecting
+      
+      return () => clearTimeout(timer);
     }
-  }, [loading, currentUser]);
+  }, [loading, currentUser, isLoading]);
 
   useEffect(() => {
     if (shouldRedirect) {
@@ -170,8 +177,9 @@ export default function DashboardPage() {
     );
   }
 
-  // Redirect if not authenticated
-  if (!isAuthenticated) {
+  // Only redirect if not authenticated AND not loading
+  // This prevents redirect loops during authentication
+  if (!isAuthenticated && !isLoading) {
     router.push('/login');
     return null;
   }
