@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '../../../lib/mongodb';
-import jwt from 'jsonwebtoken';
+import { getToken } from 'next-auth/jwt';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
-
-function getUserFromRequest(req: NextRequest) {
-  const token = req.cookies.get('token')?.value || req.headers.get('authorization')?.split(' ')[1];
-  if (!token) return null;
-  try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch {
-    return null;
-  }
+async function getUserFromRequest(req: NextRequest) {
+  const token = await getToken({ 
+    req, 
+    secret: process.env.NEXTAUTH_SECRET 
+  });
+  return token;
 }
 
 function getUserId(user: any) {
@@ -23,7 +19,7 @@ function getUserId(user: any) {
 }
 
 export async function POST(req: NextRequest) {
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { quizId, score, answers } = await req.json();
@@ -43,7 +39,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const db = await getDb();
