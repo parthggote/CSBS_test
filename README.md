@@ -32,7 +32,7 @@ A modern web platform built with Next.js for the Computer Science and Business S
 
 1. Clone the repository
 ```bash
-git clone [repository-url]
+git clone https://github.com/parthggote/CSBS_test.git
 cd csbs-platform
 ```
 
