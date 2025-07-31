@@ -76,11 +76,20 @@ export const authOptions: NextAuthOptions = {
       console.log('Redirect callback:', { url, baseUrl });
       
       // If we're already on the dashboard, don't redirect
-      if (url.includes('/dashboard')) {
+      if (url.includes('/dashboard') || url.includes('/admin')) {
         return url;
       }
       
-      // Always redirect to dashboard for successful logins
+      // Check if this is a sign-in callback
+      if (url.includes('/api/auth/callback')) {
+        // Get the user's role from the session/token
+        // For now, redirect to dashboard and let middleware handle role-based routing
+        const redirectUrl = '/dashboard';
+        console.log('Redirecting to:', redirectUrl);
+        return redirectUrl;
+      }
+      
+      // For other cases, redirect to dashboard
       const redirectUrl = '/dashboard';
       console.log('Redirecting to:', redirectUrl);
       return redirectUrl;
@@ -145,6 +154,12 @@ export const authOptions: NextAuthOptions = {
           session.user.role = "student";
         }
       }
+      
+      // Also ensure role is available from token
+      if (token?.role) {
+        session.user.role = token.role;
+      }
+      
       return session;
     },
     async jwt({ token, user, account }: any) {
@@ -165,6 +180,12 @@ export const authOptions: NextAuthOptions = {
           token.role = "student";
         }
       }
+      
+      // Ensure role is always set
+      if (!token.role) {
+        token.role = "student";
+      }
+      
       return token;
     },
   },
