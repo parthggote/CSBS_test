@@ -75,14 +75,9 @@ export const authOptions: NextAuthOptions = {
       // Log for debugging
       console.log('Redirect callback:', { url, baseUrl });
       
-      // If it's a callback URL, redirect based on user role
-      if (url.includes('/api/auth/callback')) {
-        // We'll redirect to dashboard and let the middleware handle role-based routing
-        return '/dashboard';
-      }
-      
-      // For other cases, use the default behavior
-      return url.startsWith(baseUrl) ? url : baseUrl;
+      // Always redirect to dashboard for successful logins
+      // The middleware will handle role-based routing
+      return '/dashboard';
     },
     async signIn({ user, account, profile }: any) {
       if (account?.provider === "google") {
