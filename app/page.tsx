@@ -178,26 +178,32 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Hero Section with Spline 3D Model Only */}
+       {/* Hero Section with Spline 3D Model (Desktop) and MP4 Video (Mobile) */}
       <section className="relative py-20 overflow-hidden bg-background min-h-[400px] md:min-h-[600px] flex items-center justify-center">
-        {/* Subtle, wide gradient overlay for hero (optional, can be removed if you want pure 3D) */}
+        {/* Subtle, wide gradient overlay for hero */}
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-400/20 via-purple-300/20 to-transparent opacity-10 blur-[2px] z-0 pointer-events-none" />
         <div className="relative w-full h-[300px] sm:h-[400px] md:h-[600px] lg:h-[710px] z-10 flex items-center justify-center -translate-y-12 sm:-translate-y-16 md:-translate-y-24 lg:-translate-y-32">
-          <Spline
-            scene="https://prod.spline.design/HV4FycB8MpWOMdRw/scene.splinecode"
-            className="!w-full !h-full rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl pointer-events-none"
-          />
-          {/* Dynamic Spline logo hiding is handled by JavaScript */}
-
-          {/* Social Media Icons - Right Side */}
-          <div className="absolute right-3 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 flex flex-col gap-2 sm:gap-3 z-20 pointer-events-auto">
-            <a href="https://www.instagram.com/cabssa_kitcoek/" target="_blank" rel="noopener noreferrer" className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-purple-600 dark:from-pink-600 dark:to-purple-700 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-pink-500 to-purple-600 dark:from-pink-600 dark:to-purple-700 rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 backdrop-blur-sm border border-white/20 dark:border-gray-700/30 group-hover:from-pink-400 group-hover:to-purple-500 group-hover:rotate-3">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </div>
+          {/* MP4 Video for Mobile */}
+          <div className="block md:hidden w-full h-full">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl"
+            >
+              <source src="/clarity-stream.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          
+          {/* Spline 3D Model for Desktop */}
+          <div className="hidden md:block w-full h-full overflow-hidden">
+            <Spline
+              scene="https://prod.spline.design/HV4FycB8MpWOMdRw/scene.splinecode"
+              className="!w-[120%] !h-[120%] !-translate-x-[10%] !-translate-y-[5%] rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl pointer-events-none"
+            />
+          </div>
             </a>
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
