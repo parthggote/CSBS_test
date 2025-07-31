@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { getToken } from 'next-auth/jwt';
 import { getDb } from '@/lib/mongodb';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
-
-function getUserFromRequest(req: NextRequest): JwtPayload | null {
-  const token = req.cookies.get('token')?.value || req.headers.get('authorization')?.split(' ')[1];
-  if (!token) return null;
-  try {
-    const user = jwt.verify(token, JWT_SECRET);
-    if (typeof user === 'object' && 'role' in user) return user as JwtPayload;
-    return null;
-  } catch {
-    return null;
-  }
+async function getUserFromRequest(req: NextRequest) {
+  const token = await getToken({ 
+    req, 
+    secret: process.env.NEXTAUTH_SECRET 
+  });
+  return token;
 }
 
 function getUserId(user: any) {
@@ -25,7 +19,7 @@ function getUserId(user: any) {
 }
 
 export async function GET(req: NextRequest) {
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
   
   const db = await getDb();
@@ -43,7 +37,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
   
   const body = await req.json();
@@ -69,7 +63,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
   
   const body = await req.json();
@@ -118,7 +112,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) return NextResponse.json({ message: 'Authentication required' }, { status: 401 });
   
   const { notificationId } = await req.json();
