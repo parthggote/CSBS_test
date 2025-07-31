@@ -72,15 +72,16 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      // Always redirect to dashboard for successful logins
-      // Force the production URL for Vercel deployment
-      const redirectUrl = 'https://csbs-test.vercel.app';
-      
       // Log for debugging
-      console.log('Redirect callback:', { url, baseUrl, redirectUrl });
+      console.log('Redirect callback:', { url, baseUrl });
       
-      // Always redirect to dashboard
-      return `${redirectUrl}/dashboard`;
+      // If it's a callback URL, redirect to dashboard
+      if (url.includes('/api/auth/callback')) {
+        return '/dashboard';
+      }
+      
+      // For other cases, use the default behavior
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
     async signIn({ user, account, profile }: any) {
       if (account?.provider === "google") {
