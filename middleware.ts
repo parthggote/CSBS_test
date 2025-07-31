@@ -6,6 +6,9 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request });
   const { pathname } = request.nextUrl;
 
+  // Log for debugging
+  console.log('Middleware:', { pathname, hasToken: !!token, role: token?.role });
+
   // Skip NextAuth API routes and static files
   if (
     pathname.startsWith('/api/auth') ||

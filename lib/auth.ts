@@ -75,6 +75,11 @@ export const authOptions: NextAuthOptions = {
       // Log for debugging
       console.log('Redirect callback:', { url, baseUrl });
       
+      // If we're already on the dashboard, don't redirect
+      if (url.includes('/dashboard')) {
+        return url;
+      }
+      
       // Always redirect to dashboard for successful logins
       const redirectUrl = '/dashboard';
       console.log('Redirecting to:', redirectUrl);
