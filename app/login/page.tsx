@@ -58,11 +58,20 @@ export default function LoginPage() {
     setError("");
     try {
       console.log("Starting Google sign-in...");
-      // Use redirect: true to let NextAuth handle the redirect
-      await signIn("google", { 
-        redirect: true,
+      // Use redirect: false to handle redirect manually
+      const result = await signIn("google", { 
+        redirect: false,
         callbackUrl: "/dashboard"
       });
+      console.log("Google sign-in result:", result);
+      
+      if (result?.error) {
+        setError("Google sign-in failed. Please try again.");
+      } else if (result?.ok) {
+        // Force redirect to dashboard
+        console.log("Google sign-in successful, redirecting to dashboard");
+        window.location.href = "/dashboard";
+      }
     } catch (err: any) {
       console.error("Google sign-in error:", err);
       setError("Google sign-in failed. Please try again.");
@@ -72,10 +81,14 @@ export default function LoginPage() {
 
   // Redirect if already authenticated
   React.useEffect(() => {
+    console.log("Login page useEffect:", { status, session, userRole: session?.user?.role });
     if (status === "authenticated" && session) {
+      console.log("User is authenticated, redirecting...");
       if (session.user?.role === "admin") {
+        console.log("Redirecting to admin dashboard");
         router.push("/admin");
       } else {
+        console.log("Redirecting to student dashboard");
         router.push("/dashboard");
       }
     }
