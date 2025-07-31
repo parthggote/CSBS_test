@@ -82,16 +82,15 @@ export const authOptions: NextAuthOptions = {
       
       // Check if this is a sign-in callback
       if (url.includes('/api/auth/callback')) {
-        // Get the user's role from the session/token
-        // For now, redirect to dashboard and let middleware handle role-based routing
+        // For sign-in callbacks, redirect to dashboard and let middleware handle role-based routing
         const redirectUrl = '/dashboard';
-        console.log('Redirecting to:', redirectUrl);
+        console.log('Sign-in callback - Redirecting to:', redirectUrl);
         return redirectUrl;
       }
       
       // For other cases, redirect to dashboard
       const redirectUrl = '/dashboard';
-      console.log('Redirecting to:', redirectUrl);
+      console.log('General redirect - Redirecting to:', redirectUrl);
       return redirectUrl;
     },
     async signIn({ user, account, profile }: any) {
@@ -115,6 +114,16 @@ export const authOptions: NextAuthOptions = {
               }
             }
           );
+          
+          // Set the role in the user object for the JWT callback
+          user.role = existingUser.role;
+          user.id = existingUser._id.toString();
+          
+          console.log('SignIn Callback - Existing User:', { 
+            email: user.email, 
+            role: user.role 
+          });
+          
           return true;
         } else {
           // New user, create account with student role
@@ -132,7 +141,17 @@ export const authOptions: NextAuthOptions = {
             preferences: {}
           };
           
-          await users.insertOne(newUser);
+          const result = await users.insertOne(newUser);
+          
+          // Set the role in the user object for the JWT callback
+          user.role = "student";
+          user.id = result.insertedId.toString();
+          
+          console.log('SignIn Callback - New User:', { 
+            email: user.email, 
+            role: user.role 
+          });
+          
           return true;
         }
       }
@@ -185,6 +204,14 @@ export const authOptions: NextAuthOptions = {
       if (!token.role) {
         token.role = "student";
       }
+      
+      // Log for debugging
+      console.log('JWT Callback:', { 
+        email: token?.email, 
+        role: token?.role, 
+        hasUser: !!user,
+        hasAccount: !!account 
+      });
       
       return token;
     },
