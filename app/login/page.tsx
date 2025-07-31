@@ -57,10 +57,20 @@ export default function LoginPage() {
     setGoogleLoading(true);
     setError("");
     try {
-      await signIn("google", { 
-        redirect: true
+      console.log("Starting Google sign-in...");
+      const result = await signIn("google", { 
+        redirect: false,
+        callbackUrl: "/dashboard"
       });
+      console.log("Google sign-in result:", result);
+      
+      if (result?.error) {
+        setError("Google sign-in failed. Please try again.");
+      } else if (result?.ok) {
+        window.location.href = "/dashboard";
+      }
     } catch (err: any) {
+      console.error("Google sign-in error:", err);
       setError("Google sign-in failed. Please try again.");
       setGoogleLoading(false);
     }
