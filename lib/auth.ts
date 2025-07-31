@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
       
       // Check if this is a sign-in callback
       if (url.includes('/api/auth/callback')) {
-        // For sign-in callbacks, redirect to dashboard and let middleware handle role-based routing
+        // For sign-in callbacks, redirect to dashboard
         const redirectUrl = '/dashboard';
         console.log('Sign-in callback - Redirecting to:', redirectUrl);
         return redirectUrl;
