@@ -178,15 +178,32 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Hero Section with Spline 3D Model Only */}
+       {/* Hero Section with Spline 3D Model (Desktop) and MP4 Video (Mobile) */}
       <section className="relative py-20 overflow-hidden bg-background min-h-[400px] md:min-h-[600px] flex items-center justify-center">
-        {/* Subtle, wide gradient overlay for hero (optional, can be removed if you want pure 3D) */}
+        {/* Subtle, wide gradient overlay for hero */}
         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-400/20 via-purple-300/20 to-transparent opacity-10 blur-[2px] z-0 pointer-events-none" />
         <div className="relative w-full h-[300px] sm:h-[400px] md:h-[600px] lg:h-[710px] z-10 flex items-center justify-center -translate-y-12 sm:-translate-y-16 md:-translate-y-24 lg:-translate-y-32">
-          <Spline
-            scene="https://prod.spline.design/HV4FycB8MpWOMdRw/scene.splinecode"
-            className="!w-full !h-full rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl pointer-events-none"
-          />
+          {/* MP4 Video for Mobile */}
+          <div className="block md:hidden w-full h-full">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl"
+            >
+              <source src="/clarity-stream.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          
+          {/* Spline 3D Model for Desktop */}
+          <div className="hidden md:block w-full h-full overflow-hidden">
+            <Spline
+              scene="https://prod.spline.design/HV4FycB8MpWOMdRw/scene.splinecode"
+              className="!w-[120%] !h-[120%] !-translate-x-[10%] !-translate-y-[5%] rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl pointer-events-none"
+            />
+          </div>
           {/* Dynamic Spline logo hiding is handled by JavaScript */}
 
           {/* Social Media Icons - Right Side */}
