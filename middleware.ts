@@ -24,6 +24,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Allow access to dashboard during authentication process
+  // This prevents redirect loops during Google OAuth
+  if (pathname === '/dashboard' && !token) {
+    // Don't redirect to login immediately, let the page handle authentication
+    return NextResponse.next();
+  }
+
   // If user is authenticated
   if (token) {
     // Redirect from auth pages to appropriate dashboard
@@ -50,8 +57,9 @@ export async function middleware(request: NextRequest) {
     }
   } else {
     // If user is not authenticated
-    // Redirect from protected pages to login (without callbackUrl to prevent loops)
-    if (pathname.startsWith('/admin') || pathname.startsWith('/dashboard')) {
+    // Only redirect from protected pages to login, not from auth callback
+    if ((pathname.startsWith('/admin') || pathname.startsWith('/dashboard')) && 
+        !pathname.includes('/api/auth/callback')) {
       const loginUrl = new URL('/login', request.url);
       // Don't add callbackUrl to prevent infinite loops
       return NextResponse.redirect(loginUrl);
