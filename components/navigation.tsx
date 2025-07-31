@@ -1,0 +1,167 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Menu, User, Settings, Moon, Sun, ChevronRight, Home, Calendar, BookOpen, Brain, LogIn } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { useTheme } from "next-themes"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth"
+
+interface NavigationProps {
+  currentUser?: {
+    name: string
+    role: "student" | "admin"
+  }
+}
+
+export function Navigation({ currentUser }: NavigationProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const { user, isAuthenticated, isAdmin, isStudent, logout } = useAuth();
+
+  // Use NextAuth user if available, otherwise fall back to prop
+  const currentUserData = user ? {
+    name: user.name || 'User',
+    role: user.role as "student" | "admin"
+  } : currentUser;
+
+  // Navigation items - only show Events, Resources, Quizzes for non-logged-in users
+  const navItems = currentUserData && (currentUserData.role === 'student' || currentUserData.role === 'admin')
+    ? [
+        { href: '/', label: 'Home', icon: Home },
+        // Events, Resources, Quizzes are hidden for logged-in users
+      ]
+    : [
+        { href: '/', label: 'Home', icon: Home },
+        { href: '/events', label: 'Events', icon: Calendar },
+        { href: '/resources', label: 'Resources', icon: BookOpen },
+        { href: '/quizzes', label: 'Quizzes', icon: Brain },
+      ];
+
+  return (
+    <nav className="border-b bg-white dark:bg-black/80 backdrop-blur sticky top-0 z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2 group">
+            {/* KITCOEK Logo */}
+            <img
+              src="/kit-logo.png"
+              alt="KITCOEK Logo"
+              className="w-35 h-10 object-contain"
+            />
+            <div className="hidden sm:block">
+              <span className="inline-flex items-center px-4 py-1 rounded-full bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/40 dark:to-purple-900/40 ring-1 ring-blue-200/40 dark:ring-blue-900/40 shadow-sm text-sm md:text-base font-semibold text-gray-900 dark:text-gray-100 tracking-tight transition-all backdrop-blur-sm">
+                Computer Science & Business Systems
+                <ChevronRight className="w-4 h-4 ml-2 text-blue-500 dark:text-blue-300" />
+                <span className="ml-2 w-2 h-2 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 animate-pulse" />
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 dark:text-gray-200 dark:hover:text-white dark:hover:drop-shadow-[0_0_8px_white] transition-colors font-medium group"
+              >
+                <item.icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
+
+            {/* Dark mode toggle */}
+            <div className="flex items-center space-x-2">
+              <Sun className={`w-5 h-5 ${theme === 'light' ? 'text-yellow-500' : 'text-gray-400'}`} />
+              <Switch
+                checked={theme === 'dark'}
+                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                aria-label="Toggle dark mode"
+              />
+              <Moon className={`w-5 h-5 ${theme === 'dark' ? 'text-blue-600' : 'text-gray-400'}`} />
+            </div>
+
+            {currentUserData ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span>{currentUserData.role === 'admin' ? currentUserData.name : (currentUserData.name ? currentUserData.name : (currentUserData.name ? currentUserData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'User'))}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link href={currentUserData.role === 'admin' ? '/admin' : '/dashboard'}>Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link href="/login">
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <LogIn className="w-4 h-4" />
+                    <span>Login</span>
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Navigation */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <div className="flex flex-col space-y-4 mt-8">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="flex items-center space-x-3 text-lg font-medium hover:text-blue-600 transition-colors group"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+                
+                {/* Dark mode toggle - Mobile */}
+                <div className="flex items-center justify-between py-2 border-t border-gray-200 dark:border-gray-700 mt-4">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</span>
+                  <div className="flex items-center space-x-2">
+                    <Sun className={`w-4 h-4 ${theme === 'light' ? 'text-yellow-500' : 'text-gray-400'}`} />
+                    <Switch
+                      checked={theme === 'dark'}
+                      onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                      aria-label="Toggle dark mode"
+                    />
+                    <Moon className={`w-4 h-4 ${theme === 'dark' ? 'text-blue-600' : 'text-gray-400'}`} />
+                  </div>
+                </div>
+                
+                {!currentUser && (
+                  <>
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
+                      <Button className="w-full">Login</Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </nav>
+  )
+}
