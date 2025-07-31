@@ -522,7 +522,7 @@ export default function HomePage() {
               <p className="text-gray-400">
                 Department of CSBS
                 <br />
-                Your Institution Name
+                Kolhapur Institute of Technology's College of Engineering
                 <br />
                 Email: cabssakit@gmail.com
               </p>
