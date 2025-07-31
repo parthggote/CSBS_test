@@ -76,8 +76,9 @@ export const authOptions: NextAuthOptions = {
       console.log('Redirect callback:', { url, baseUrl });
       
       // Always redirect to dashboard for successful logins
-      // The middleware will handle role-based routing
-      return '/dashboard';
+      const redirectUrl = '/dashboard';
+      console.log('Redirecting to:', redirectUrl);
+      return redirectUrl;
     },
     async signIn({ user, account, profile }: any) {
       if (account?.provider === "google") {

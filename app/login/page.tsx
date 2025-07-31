@@ -58,17 +58,11 @@ export default function LoginPage() {
     setError("");
     try {
       console.log("Starting Google sign-in...");
-      const result = await signIn("google", { 
-        redirect: false,
+      // Use redirect: true to let NextAuth handle the redirect
+      await signIn("google", { 
+        redirect: true,
         callbackUrl: "/dashboard"
       });
-      console.log("Google sign-in result:", result);
-      
-      if (result?.error) {
-        setError("Google sign-in failed. Please try again.");
-      } else if (result?.ok) {
-        window.location.href = "/dashboard";
-      }
     } catch (err: any) {
       console.error("Google sign-in error:", err);
       setError("Google sign-in failed. Please try again.");
