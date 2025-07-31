@@ -75,8 +75,9 @@ export const authOptions: NextAuthOptions = {
       // Log for debugging
       console.log('Redirect callback:', { url, baseUrl });
       
-      // If it's a callback URL, redirect to dashboard
+      // If it's a callback URL, redirect based on user role
       if (url.includes('/api/auth/callback')) {
+        // We'll redirect to dashboard and let the middleware handle role-based routing
         return '/dashboard';
       }
       
@@ -149,6 +150,19 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.role = user.role;
         token.id = user.id;
+      } else if (token?.email) {
+        // For Google OAuth, fetch user role from database
+        const db = await getDb();
+        const users = db.collection("users");
+        const dbUser = await users.findOne({ email: token.email });
+        
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.id = dbUser._id.toString();
+        } else {
+          // Default to student role if user not found
+          token.role = "student";
+        }
       }
       return token;
     },
